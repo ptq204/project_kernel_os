@@ -1,0 +1,1 @@
+cmd_/home/viperk/CS333/project1/random.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/viperk/CS333/project1/random.ko /home/viperk/CS333/project1/random.o /home/viperk/CS333/project1/random.mod.o ;  true
