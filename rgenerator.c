@@ -14,7 +14,7 @@ static dev_t first;
 static int __init init_random(void){
 
 	int i;
-	if (alloc_chrdev_region(&first, 0, 3, "Shweta") < 0)
+	if (alloc_chrdev_region(&first, 0, 3, "random_generator") < 0)
 	{
 		return -1;
 	}
