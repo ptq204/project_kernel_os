@@ -53,7 +53,7 @@ static int __init init_random(void){
 	}
 	printk(KERN_INFO "Registered device class successfully");
 	
-	if (device_create(randClass, NULL, first, NULL, "mynull") == NULL)
+	if (device_create(randClass, NULL, first, NULL, "rgenerator") == NULL)
 	{
 		class_destroy(randClass);
 		unregister_chrdev_region(first, 1);
@@ -84,18 +84,17 @@ static ssize_t device_read(struct file *file, char *c, size_t size, loff_t *loff
 	int i;
 	char buf[60];
 	if(*loff_t > 3){
-	
-		get_random_bytes(&i, sizeof(int));
-		printk("Random number: %d\n", i);
-		
-		sprintf(buf, "%d", i);
-		if(copy_to_user(c, buf, sizeof(buf))){
-			return sizeof(buf);
-		}
-		return -1;
+		return 0;
 	}
+	get_random_bytes(&i, sizeof(int));
+	printk("Random number: %d\n", i);
 	
-	return -1;
+	sprintf(buf, "%d", i);
+	if(copy_to_user(c, buf, strlen(buf))){
+		return -EFAULT;
+	}
+	*loff_t+=4;
+	return sizeof(buf); 
 }
 
 static void __exit exit_random(void){

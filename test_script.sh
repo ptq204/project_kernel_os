@@ -12,7 +12,7 @@ sudo insmod rgenerator.ko
 lsmod | grep rgenerator
 echo "=================================="
 #run test program here
-sudo cat /dev/rgenerator
+sudo cat /dev/random_generator
 echo "Exit LKM"
 sudo rmmod rgenerator
 echo "=================================="
