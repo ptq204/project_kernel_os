@@ -53,7 +53,7 @@ static int __init init_random(void){
 	}
 	printk(KERN_INFO "Registered device class successfully");
 	
-	if (device_create(randClass, NULL, first, NULL, "rgenerator") == NULL)
+	if (device_create(randClass, NULL, first, NULL, DEVICE_NAME) == NULL)
 	{
 		class_destroy(randClass);
 		unregister_chrdev_region(first, 1);

@@ -10,9 +10,15 @@ echo "=================================="
 echo "Init LKM"
 sudo insmod rgenerator.ko
 lsmod | grep rgenerator
+echo "List in proc"
+sudo cat /proc/devices | grep random_generator
+echo "List in dev"
+ls /dev/ | grep random_generator
 echo "=================================="
 #run test program here
-sudo cat /dev/random_generator
+echo "Reading from device file"
+sudo cat /dev/random_generator && echo ""
+echo "=================================="
 echo "Exit LKM"
 sudo rmmod rgenerator
 echo "=================================="

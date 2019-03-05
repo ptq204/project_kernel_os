@@ -13,15 +13,24 @@ cd project_kernel_os
 
 ### Run with script
 ```sh
-sudo chmod +x test_script.sh
+sudo chmod +x test_script.sh \
 ./test_script.sh
 ```
 
 ### Run manually
+
+#### Make and load module
 ```sh
-make all
+make all \
 sudo insmod rgenerator.ko
-./test_program
-sudo rmmod rgenerator
+```
+#### Test module
+```sh
+sudo cat /dev/random_generator
+```
+
+#### Unload module
+```sh 
+sudo rmmod rgenerator \
 dmesg | tail -10
 ```
