@@ -12,7 +12,9 @@ sudo insmod rgenerator.ko
 lsmod | grep rgenerator
 echo "=================================="
 #run test program here
-#./test_program
+sudo cat /dev/rgenerator
+echo "Exit LKM"
+sudo rmmod rgenerator
 echo "=================================="
 echo "View log"
 dmesg | tail -10
