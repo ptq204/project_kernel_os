@@ -35,7 +35,7 @@ sudo rmmod rgenerator \
 dmesg | tail -10
 ```
   
-## Report
+# Report
 
 ## Module
 - **Loadable kernel modules**:  
