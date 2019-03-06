@@ -93,8 +93,8 @@ static ssize_t device_read(struct file *file, char *c, size_t size, loff_t *loff
 	if(copy_to_user(c, buf, strlen(buf))){
 		return -EFAULT;
 	}
-	*loff_t+=4;
-	return sizeof(buf); 
+	*loff_t+=strlen(buf);
+	return strlen(buf); 
 }
 
 static void __exit exit_random(void){
