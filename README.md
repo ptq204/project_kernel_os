@@ -34,3 +34,41 @@ sudo cat /dev/random_generator
 sudo rmmod rgenerator \
 dmesg | tail -10
 ```
+  
+## Report
+
+## Module
+- **Loadable kernel modules**:  
+The kernel has a set of core components and links in additional services via modules. add new driver directly to kernel without recompiling the kernel (linking services dynamically).  
+Reduce kernel size: only necessary kernel is inserted  
+file .ko
+
+## Build linux kernel module
+- Use library <linux/*> which provides functions and macro in kernel mode.
+- <linux/module>  
+  **module_init**: define which functions will execute when insert module into kernel  
+  **module_exit**: define which functions will execute when remove module from kernel
+- Use **printk** print message in C but is used for Linux kernel => easy to debug
+- Compile linux kernel: ***Fill this***
+- **sudo insmod "module_name"** to insert module into kernel
+- **sudo rmmod "module_name"** to remove module from kernel
+- **lsmod**: check if module is loaded successfully. The information contains two columns:  
+  - the amount of memory used by module (usually see 16384)
+  - number of instances of module are being used.  
+- **dmesg**: view the process of module.
+## Driver
+## Character device driver
+**Basic characteristics**
+- byte oriented device
+- transfer data to/from user by reading or writing byte data in character-by-character stream.
+- to use this we need to access device files which connect with driver through VFS (virtual file system):
+  - Applications do file operations on device files.
+  - VFS (virtual file system ) translates the functions of the driver defined in device files.
+  - Those functions are executed in kernel mode.
+  - The order: Application -> Device files -> Character device driver -> Character device.  
+
+**Major and minor file number**
+- Kernel uses Major number to "map" the device with an assoociated driver instead of file's name.
+- Before using the driver we need to register the device file number by using the following function:
+  - *alloc_chrdev_region*(dev_t *first, unsigned int firstminor, unsigned int cnt, char *name);
+
