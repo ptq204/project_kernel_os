@@ -55,7 +55,7 @@ file .ko
 - **lsmod**: check if module is loaded successfully. The information contains two columns:  
   - the amount of memory used by module (usually see 16384)
   - number of instances of module are being used.  
-- **dmesg**: view the process of module.
+- **dmesg**: view the kernel log.
 ## Driver
 ## Character device driver
 **Basic characteristics**
@@ -69,6 +69,14 @@ file .ko
 
 **Major and minor file number**
 - Kernel uses Major number to "map" the device with an assoociated driver instead of file's name.
-- Before using the driver we need to register the device file number by using the following function:
+- Before using the driver we need to dynamically allocate a free major number and register the device file number by using the following function:
   - *alloc_chrdev_region*(dev_t *first, unsigned int firstminor, unsigned int cnt, char *name);
+
+**Create device class and device file**
+- Create a virtual device class using:
+  - *class_create*(THIS_MODULE, DEVICE_CLASS);
+- Afterwards the name in device class will appear in /sys/class/
+- Create device file:
+  - *device_create*(struct class *class, struct device *parent, dev_t devt, void *drvdata, const char *device_name);
+- Afterwards there will be a file in /dev/ with the name provided by device_name
 
