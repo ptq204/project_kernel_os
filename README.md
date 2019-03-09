@@ -74,6 +74,7 @@ file .ko
 ```c
 alloc_chrdev_region(dev_t *first, unsigned int firstminor, unsigned int cnt, char *name);
 ```
+where **firstminor** is a first of the requested range of minor numbers, **cnt** is a number of minor numbers. The function above will return a major number which is chosen dynamically along with the first minor number. We can see the returned number in *dev
 
 **Create device class and device file**
 - Create a virtual device class using:
@@ -86,7 +87,7 @@ class_create(THIS_MODULE, DEVICE_CLASS);
 device_create(struct class *class, struct device *parent, dev_t devt, void *drvdata, const char *device_name);
 ```
 - Afterwards there will be a file in /dev/ with the name provided by device_name
-- Then we add it to cdev
+- Then we add it to **cdev**. Here, the **struct cdev** is the kernel's internal structure that represents char devices. It contains file operations structure and information of major/minor number the of driver. Therefore, we need to register a structure of **cdev** to register a character device in kernel.
 
 ### Termination
 **Exit module**
@@ -126,4 +127,5 @@ static ssize_t device_read(struct file *file, char *c, size_t size, loff_t *loff
 - We use printk to check number generated in the kernel log
 - We use sprintf to put the numbers as a string into the buffer "buf"
 - Finally the string buffer gets copied to the user space.
-- "*loff_t" is used to check the offset
+- "*loff_t" is used to check the offset. We want to return a char sequence represents a random integer number so we have to read 4 times (int = 4 bytes and each time we read 1 byte to buffer). Therefore, we check if *loff_t > 3 (we had read 4 times) then return 0 (end of file).
+- **buf** has a length 60 to ensure it can completely contain byte stream from an integer.
