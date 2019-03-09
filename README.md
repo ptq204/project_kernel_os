@@ -67,16 +67,63 @@ file .ko
   - Those functions are executed in kernel mode.
   - The order: Application -> Device files -> Character device driver -> Character device.  
 
+### Initialization
 **Major and minor file number**
 - Kernel uses Major number to "map" the device with an assoociated driver instead of file's name.
 - Before using the driver we need to dynamically allocate a free major number and register the device file number by using the following function:
-  - *alloc_chrdev_region*(dev_t *first, unsigned int firstminor, unsigned int cnt, char *name);
+```c
+alloc_chrdev_region(dev_t *first, unsigned int firstminor, unsigned int cnt, char *name);
+```
 
 **Create device class and device file**
 - Create a virtual device class using:
-  - *class_create*(THIS_MODULE, DEVICE_CLASS);
+```c
+class_create(THIS_MODULE, DEVICE_CLASS);
+```
 - Afterwards the name in device class will appear in /sys/class/
 - Create device file:
-  - *device_create*(struct class *class, struct device *parent, dev_t devt, void *drvdata, const char *device_name);
+```c
+device_create(struct class *class, struct device *parent, dev_t devt, void *drvdata, const char *device_name);
+```
 - Afterwards there will be a file in /dev/ with the name provided by device_name
+- Then we add it to cdev
 
+### Termination
+**Exit module**
+
+
+### Functionality
+**Implementing file operations**
+- To have file operations functionality, first we must include the file linux/fs.h
+- Afterwards we map the operations we want to the prototype function declarations we provided:
+```c
+struct file_operations fops = {
+       read: device_read,
+       open: device_open,
+};
+```
+- Here we only really need the read function so we implement it as follow:
+```c
+static ssize_t device_read(struct file *file, char *c, size_t size, loff_t *loff_t){
+
+        int i;
+        char buf[60];
+        if(*loff_t > 3){
+                return 0;
+        }
+        get_random_bytes(&i, sizeof(int));
+        printk("Random number: %d\n", i);
+
+        sprintf(buf, "%d", i);
+        if(copy_to_user(c, buf, strlen(buf))){
+                return -EFAULT;
+        }
+        *loff_t+=strlen(buf);
+        return strlen(buf);
+}
+```
+- The main idea is to first generate a random integer and save it in "i".
+- We use printk to check number generated in the kernel log
+- We use sprintf to put the numbers as a string into the buffer "buf"
+- Finally the string buffer gets copied to the user space.
+- "*loff_t" is used to check the offset
