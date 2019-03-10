@@ -39,9 +39,10 @@ dmesg | tail -10
 
 ## Module
 - **Loadable kernel modules**:  
-The kernel has a set of core components and links in additional services via modules. add new driver directly to kernel without recompiling the kernel (linking services dynamically).  
-Reduce kernel size: only necessary kernel is inserted  
-file .ko
+This is the kernel which has a set of core components and links in additional services via modules. It has some advantages like:
+- add new driver directly to kernel without recompiling the kernel (linking services dynamically).  
+- Reduce kernel size: only necessary kernel is inserted.  
+The Linux kernel module is a file with extension **.ko**
 
 ## Build linux kernel module
 - Use library <linux/*> which provides functions and macro in kernel mode.
@@ -49,7 +50,7 @@ file .ko
   **module_init**: define which functions will execute when insert module into kernel  
   **module_exit**: define which functions will execute when remove module from kernel
 - Use **printk** print message in C but is used for Linux kernel => easy to debug
-- Compile linux kernel: ***Fill this***
+- Compile linux kernel using **make** command.
 - **sudo insmod "module_name"** to insert module into kernel
 - **sudo rmmod "module_name"** to remove module from kernel
 - **lsmod**: check if module is loaded successfully. The information contains two columns:  
@@ -57,6 +58,8 @@ file .ko
   - number of instances of module are being used.  
 - **dmesg**: view the kernel log.
 ## Driver
+- Driver is a controller which operates or controls the devices under its right.
+- Driver is important because it provides a hardware user interface. It can communicate with the device through **computer bus** (Device specific) or communicate with the OS (OS specific).
 ## Character device driver
 **Basic characteristics**
 - byte oriented device
