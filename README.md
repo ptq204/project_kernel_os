@@ -1,5 +1,9 @@
 # project_kernel_os
 
+## Author:
+- Pham The Quyen - 1651029 - ptquyen@apcs.vn
+- Nguyen Quoc Viet - 1651069 - nqviet@apcs.vn
+
 ## Usage:
 
 ### Clone repository
