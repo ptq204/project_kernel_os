@@ -108,7 +108,7 @@ static ssize_t device_read(struct file *file, char *c, size_t size, loff_t *loff
 
         int i;
         char buf[60];
-        if(*loff_t > 3){
+        if(*loff_t > 0){
                 return 0;
         }
         get_random_bytes(&i, sizeof(int));
