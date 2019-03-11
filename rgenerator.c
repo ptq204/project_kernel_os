@@ -16,7 +16,6 @@
 #define DEVICE_CLASS "random_generator_class"
 
 static dev_t first;
-static int numOpens = 0;
 static struct cdev c_dev;
 static int majorNumber;
 static struct class* randClass = NULL; // device class variable

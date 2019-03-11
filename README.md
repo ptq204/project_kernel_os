@@ -6,14 +6,19 @@ currently working on "Major and Minor file number"
 
 ### Clone repository
 ```sh
+#install git
 sudo apt-get install git
+#clone repository to machine
 git clone https://github.com/ptq204/project_kernel_os.git
+#change working directory
 cd project_kernel_os
 ```
 
 ### Run with script
 ```sh
+#make the script executable
 sudo chmod +x test_script.sh \
+#run the script
 ./test_script.sh
 ```
 
@@ -21,17 +26,23 @@ sudo chmod +x test_script.sh \
 
 #### Make and load module
 ```sh
-make all \
+#Compile and build using Make
+make all &&
+#Load the module
 sudo insmod rgenerator.ko
 ```
 #### Test module
 ```sh
+#User perform read from the character device file
 sudo cat /dev/random_generator
+#Can use "tail" also
 ```
 
 #### Unload module
 ```sh 
-sudo rmmod rgenerator \
+#Unload module
+sudo rmmod rgenerator &&
+#View kernel log
 dmesg | tail -10
 ```
   
@@ -45,14 +56,14 @@ This is the kernel which has a set of core components and links in additional se
 The Linux kernel module is a file with extension **.ko**
 
 ## Build linux kernel module
-- Use library <linux/*> which provides functions and macro in kernel mode.
-- <linux/module>  
+- Use library **<linux/*>** which provides functions and macro in kernel mode.
+- **<linux/module>**  
   **module_init**: define which functions will execute when insert module into kernel  
   **module_exit**: define which functions will execute when remove module from kernel
 - Use **printk** print message in C but is used for Linux kernel => easy to debug
 - Compile linux kernel using **make** command.
-- **sudo insmod "module_name"** to insert module into kernel
-- **sudo rmmod "module_name"** to remove module from kernel
+- **sudo insmod <module_name>** to insert module into kernel
+- **sudo rmmod <module_name>** to remove module from kernel
 - **lsmod**: check if module is loaded successfully. The information contains two columns:  
   - the amount of memory used by module (usually see 16384)
   - number of instances of module are being used.  
@@ -94,11 +105,21 @@ device_create(struct class *class, struct device *parent, dev_t devt, void *drvd
 
 ### Termination
 **Exit module**
+- When we unload the module, a destrutor function will run to do the clean up:
+```c
+static void __exit exit_random(void){
 
+        cdev_del(&c_dev);
+        device_destroy(randClass, first);
+        class_destroy(randClass);
+        unregister_chrdev_region(first, 3);
+        printk("Exit random generator module\n");
+}
+```
 
 ### Functionality
 **Implementing file operations**
-- To have file operations functionality, first we must include the file linux/fs.h
+- To have file operations functionality, first we must include the file **<linux/fs.h>**
 - Afterwards we map the operations we want to the prototype function declarations we provided:
 ```c
 struct file_operations fops = {
@@ -126,9 +147,17 @@ static ssize_t device_read(struct file *file, char *c, size_t size, loff_t *loff
         return strlen(buf);
 }
 ```
-- The main idea is to first generate a random integer and save it in "i".
-- We use printk to check number generated in the kernel log
-- We use sprintf to put the numbers as a string into the buffer "buf"
+- The main idea is to first generate a random integer thanks to provided function **get_random_bytes** and save it in **i**.
+- We use **printk** to check number generated in the kernel log
+- We use **sprintf** to put the numbers as a string into the buffer **buf**
 - Finally the string buffer gets copied to the user space.
-- "*loff_t" is used to check the offset. We want to return a char sequence represents a random integer number so we have to read 4 times (int = 4 bytes and each time we read 1 byte to buffer). Therefore, we check if *loff_t > 3 (we had read 4 times) then return 0 (end of file).
+- **\*loff_t** is used to check the offset. We want to return a char sequence represents a random integer number so we increment the offset for the next read to the size of char sequence. And at the beginning we check if the offset is larger than 0 (meaning th number has already been read) we return 0.
 - **buf** has a length 60 to ensure it can completely contain byte stream from an integer.
+
+## Results
+
+### Result of running test script
+![test_script output](/images/run_test_script.png)
+
+### Result of running manually
+![manual output](/images/run_manually.png)
